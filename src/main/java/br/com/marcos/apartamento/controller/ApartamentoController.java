@@ -5,9 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -50,5 +51,17 @@ public class ApartamentoController {
 				
 		return new ResponseEntity<List<Apartamento>>(apartamentos, HttpStatus.OK); // Retornar a lista em JSON
 	}
+	
+	
+	@PostMapping(value = "salvar") // mapeia a URL
+	@ResponseBody // descriçao da resposta
+	public ResponseEntity<Apartamento> salvar(@RequestBody Apartamento apartamento) { // Recebe os dados para salvar
+		Apartamento apartamento2 = apartamentoRepository.save(apartamento);
+		
+		return new ResponseEntity<Apartamento>(apartamento2, HttpStatus.CREATED);
+		
+	}
+	
+	
 
 }
