@@ -5,12 +5,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -62,6 +65,26 @@ public class ApartamentoController {
 		
 	}
 	
+	@PutMapping(value = "atualizar") // mapeia a URL
+	@ResponseBody // descriçao da resposta
+	public ResponseEntity<?> atualizar(@RequestBody Apartamento apartamento) { // Recebe os dados para salvar
+		
+		if (apartamento.getId() == null) {
+			return new ResponseEntity<String>("ID não foi informado para atualizacao", HttpStatus.OK);
+		}
+		
+		Apartamento apartamento2 = apartamentoRepository.saveAndFlush(apartamento);
+		
+		return new ResponseEntity<Apartamento>(apartamento2, HttpStatus.OK);
+	}
 	
+	
+	@DeleteMapping(value = "delete") // mapeia a URL
+	@ResponseBody // descriçao da resposta
+	public ResponseEntity<String> delete(@RequestParam Long id) { // Recebe os dados para deletar
+		apartamentoRepository.deleteById(id);
+		
+		return new ResponseEntity<String>("Apartamento deletado com sucesso!", HttpStatus.OK);
+	}
 
 }
