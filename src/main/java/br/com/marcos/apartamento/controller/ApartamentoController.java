@@ -47,7 +47,7 @@ public class ApartamentoController {
 	}
 	
 	/* Primeiro metodo de API */
-	@GetMapping(value = "listatodos")
+	@GetMapping(value = "apartamento")
 	@ResponseBody // Retorna os dados para o corpo 
 	public ResponseEntity<List<Apartamento>> listaApartamentos() {
 		List<Apartamento> apartamentos = apartamentoRepository.findAll(); // executar consulta no banco de dados
@@ -56,7 +56,7 @@ public class ApartamentoController {
 	}
 	
 	
-	@PostMapping(value = "salvar") // mapeia a URL
+	@PostMapping(value = "apartamento") // mapeia a URL
 	@ResponseBody // descriçao da resposta
 	public ResponseEntity<Apartamento> salvar(@RequestBody Apartamento apartamento) { // Recebe os dados para salvar
 		Apartamento apartamento2 = apartamentoRepository.save(apartamento);
@@ -65,7 +65,7 @@ public class ApartamentoController {
 		
 	}
 	
-	@PutMapping(value = "atualizar") // mapeia a URL
+	@PutMapping(value = "produto") // mapeia a URL
 	@ResponseBody // descriçao da resposta
 	public ResponseEntity<?> atualizar(@RequestBody Apartamento apartamento) { // Recebe os dados para salvar
 		
@@ -79,7 +79,7 @@ public class ApartamentoController {
 	}
 	
 	
-	@DeleteMapping(value = "delete") // mapeia a URL
+	@DeleteMapping(value = "produto") // mapeia a URL
 	@ResponseBody // descriçao da resposta
 	public ResponseEntity<String> delete(@RequestParam Long id) { // Recebe os dados para deletar
 		apartamentoRepository.deleteById(id);
