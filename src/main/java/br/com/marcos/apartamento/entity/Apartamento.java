@@ -3,6 +3,8 @@ package br.com.marcos.apartamento.entity;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,7 +31,8 @@ public class Apartamento implements Serializable {
 	
 	private int numero;
 	
-	private String estado;
+	@Enumerated(value = EnumType.STRING) // Enumeracao por tipo String
+	private EstadoApartamento estado;
 	
 
 	public Long getId() {
@@ -48,14 +51,14 @@ public class Apartamento implements Serializable {
 		this.numero = numero;
 	}
 
-	public String getEstado() {
+	public EstadoApartamento getEstado() {
 		return estado;
 	}
 
-	public void setEstado(String estado) {
+	public void setEstado(EstadoApartamento estado) {
 		this.estado = estado;
 	}
-	
+
 	
 
 }

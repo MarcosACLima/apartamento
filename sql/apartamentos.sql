@@ -1,0 +1,31 @@
+-- VERSAO 1 - SEM ENUMERACAO
+
+CREATE Database apartamentos;
+
+CREATE TABLE apartamento (
+	id BIGSERIAL NOT NULL PRIMARY KEY,
+	numero INTEGER NOT NULL,
+	estado CHARACTER VARYING(10) NOT NULL,
+);
+
+INSERT INTO apartamento (numero, estado)
+VALUES 
+('11', 'LIVRE'),
+('12', 'LOCADO')
+
+
+-- VERSAO 2 - COM ENUMERACAO
+
+CREATE TABLE apartamento (
+	id BIGSERIAL NOT NULL PRIMARY KEY,
+	numero INTEGER NOT NULL,
+	estado CHARACTER VARYING(10) NOT NULL,
+	CONSTRAINT estado_check CHECK (estado::text = ANY (ARRAY['LIVRE'::CHARACTER VARYING, 'LOCADO'::CHARACTER VARYING]::text[]))
+);
+
+INSERT INTO apartamento (numero, estado)
+VALUES 
+('11', 'LIVRE'),
+('32', 'LOCADO')
+
+
