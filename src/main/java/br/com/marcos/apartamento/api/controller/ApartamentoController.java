@@ -1,9 +1,6 @@
 package br.com.marcos.apartamento.api.controller;
 
-import java.io.Serializable;
 import java.util.List;
-
-import javax.persistence.Entity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +13,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -64,9 +60,9 @@ public class ApartamentoController {
 	@GetMapping(value = "apartamento")
 	@ResponseBody // Retorna os dados para o corpo 
 	public ResponseEntity<List<Apartamento>> listaApartamentos() {
-		List<Apartamento> apartamentos = apartamentoRepository.findAll(); // executar consulta no banco de dados
+		List<Apartamento> apartamentos = apartamentoService.listar(); // executar consulta no banco de dados
 				
-		return new ResponseEntity<List<Apartamento>>(apartamentos, HttpStatus.OK); // Retornar a lista em JSON
+		return ResponseEntity.ok(apartamentos); // Retornar a lista em JSON
 	}
 	
 	
@@ -100,12 +96,14 @@ public class ApartamentoController {
 	}
 	
 	
-	@DeleteMapping(value = "produto") // mapeia a URL
+	@DeleteMapping(value = "produto/{id}") // mapeia a URL
 	@ResponseBody // descriçao da resposta
-	public ResponseEntity<String> delete(@RequestParam Long id) { // Recebe os dados para deletar
-		apartamentoRepository.deleteById(id);
-		
-		return new ResponseEntity<String>("Apartamento deletado com sucesso!", HttpStatus.OK);
+	public ResponseEntity<String> delete(@PathVariable("id") Long id) { // Recebe os dados para deletar
+		return apartamentoService.obterPorId(id).map( entidade -> {
+			apartamentoService.deletar(entidade);
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+		}).orElseGet( () -> 
+			new ResponseEntity("Apartamento deletado com sucesso!", HttpStatus.BAD_REQUEST) );
 	}
 	
 	private Apartamento converter(ApartamentoDTO apartamentoDTO) {
