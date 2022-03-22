@@ -7,5 +7,11 @@ import br.com.marcos.apartamento.entity.Apartamento;
 
 @Repository
 public interface ApartamentoRepository extends JpaRepository<Apartamento, Long> {
+	
+	
+//	Optional<Apartamento> findByNumero(Integer numero);
+	
+//	SELECT * FROM apartamento WHERE exists ()
+ 	boolean existsByNumero(Integer numero);
 
 }

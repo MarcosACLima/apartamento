@@ -29,7 +29,7 @@ public class Apartamento implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private int numero;
+	private Integer numero;
 	
 	@Enumerated(value = EnumType.STRING) // Enumeracao por tipo String
 	private EstadoApartamento estado;
