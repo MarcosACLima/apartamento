@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.marcos.apartamento.entity.Apartamento;
-import br.com.marcos.apartamento.repository.ApartamentoRepository;
+import br.com.marcos.apartamento.model.entity.Apartamento;
+import br.com.marcos.apartamento.model.repository.ApartamentoRepository;
 
 @RestController
 public class ApartamentoController {
