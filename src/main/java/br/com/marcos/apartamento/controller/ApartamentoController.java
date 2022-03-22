@@ -1,5 +1,6 @@
 package br.com.marcos.apartamento.controller;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ public class ApartamentoController {
 	
 	@Autowired /* IC/CD ou CDI - Injeção de dependencias */
 	private ApartamentoRepository apartamentoRepository;
+	
+	private ApartamentoService apartamentoService;
 	
 	// http://localhost:8080/crud/mostrarnome/digitar string name
 	@RequestMapping(value = "/mostrarnome/{name}", method = RequestMethod.GET)
@@ -58,11 +61,13 @@ public class ApartamentoController {
 	
 	@PostMapping(value = "apartamento") // mapeia a URL
 	@ResponseBody // descriçao da resposta
-	public ResponseEntity<Apartamento> salvar(@RequestBody Apartamento apartamento) { // Recebe os dados para salvar
-		Apartamento apartamento2 = apartamentoRepository.save(apartamento);
-		
-		return new ResponseEntity<Apartamento>(apartamento2, HttpStatus.CREATED);
-		
+	public ResponseEntity salvar(@RequestBody Apartamento apartamento) { // Recebe os dados para salvar
+		try {
+			Apartamento apartamentoSalvo = apartamentoService.salvar(apartamento);
+			return new ResponseEntity(apartamentoSalvo, HttpStatus.CREATED);
+		} catch (RegraNegocioException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}	
 	}
 	
 	@PutMapping(value = "produto") // mapeia a URL
