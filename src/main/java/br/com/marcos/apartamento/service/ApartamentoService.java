@@ -1,6 +1,7 @@
 package br.com.marcos.apartamento.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import br.com.marcos.apartamento.model.entity.Apartamento;
 import br.com.marcos.apartamento.model.enums.EstadoApartamento;
@@ -17,7 +18,7 @@ public interface ApartamentoService {
 	
 	void atualizarEstado(Apartamento apartamento, EstadoApartamento estado);
 
-	
+	Optional<Apartamento> obterPorId(Long id);
 	
 //	@Autowired
 //	private ApartamentoRepository apartamentoRepository;

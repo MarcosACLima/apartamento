@@ -1,7 +1,9 @@
-package br.com.marcos.apartamento.controller;
+package br.com.marcos.apartamento.api.controller;
 
 import java.io.Serializable;
 import java.util.List;
+
+import javax.persistence.Entity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,16 +21,25 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.marcos.apartamento.api.dto.ApartamentoDTO;
+import br.com.marcos.apartamento.exception.RegraNegocioException;
 import br.com.marcos.apartamento.model.entity.Apartamento;
+import br.com.marcos.apartamento.model.enums.EstadoApartamento;
 import br.com.marcos.apartamento.model.repository.ApartamentoRepository;
+import br.com.marcos.apartamento.service.ApartamentoService;
 
 @RestController
+//@RequestMapping("/api")
 public class ApartamentoController {
 	
 	@Autowired /* IC/CD ou CDI - Injeção de dependencias */
 	private ApartamentoRepository apartamentoRepository;
 	
 	private ApartamentoService apartamentoService;
+	
+	private ApartamentoController(ApartamentoService apartamentoService) {
+		this.apartamentoService = apartamentoService;
+	}
 	
 	// http://localhost:8080/crud/mostrarnome/digitar string name
 	@RequestMapping(value = "/mostrarnome/{name}", method = RequestMethod.GET)
@@ -61,26 +72,31 @@ public class ApartamentoController {
 	
 	@PostMapping(value = "apartamento") // mapeia a URL
 	@ResponseBody // descriçao da resposta
-	public ResponseEntity salvar(@RequestBody Apartamento apartamento) { // Recebe os dados para salvar
+	public ResponseEntity salvar(@RequestBody ApartamentoDTO apartamentoDTO) { // Recebe os dados para salvar
 		try {
-			Apartamento apartamentoSalvo = apartamentoService.salvar(apartamento);
-			return new ResponseEntity(apartamentoSalvo, HttpStatus.CREATED);
+			Apartamento apartamento = converter(apartamentoDTO);
+			apartamento = apartamentoService.salvar(apartamento);
+			return new ResponseEntity(apartamento, HttpStatus.CREATED); 
 		} catch (RegraNegocioException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}	
 	}
 	
-	@PutMapping(value = "produto") // mapeia a URL
+	@PutMapping(value = "produto/{id}") // mapeia a URL
 	@ResponseBody // descriçao da resposta
-	public ResponseEntity<?> atualizar(@RequestBody Apartamento apartamento) { // Recebe os dados para salvar
+	public ResponseEntity atualizar(@PathVariable("id") Long id, @RequestBody ApartamentoDTO apartamentoDTO) { // Recebe os dados para salvar
 		
-		if (apartamento.getId() == null) {
-			return new ResponseEntity<String>("ID não foi informado para atualizacao", HttpStatus.OK);
-		}
-		
-		Apartamento apartamento2 = apartamentoRepository.saveAndFlush(apartamento);
-		
-		return new ResponseEntity<Apartamento>(apartamento2, HttpStatus.OK);
+		return apartamentoService.obterPorId(id).map( entity -> {
+			try {
+				Apartamento apartamento = converter(apartamentoDTO);
+				apartamento.setId(entity.getId());
+				apartamentoService.atualizar(apartamento);
+				return ResponseEntity.ok(apartamento);
+			} catch (RegraNegocioException e) {
+				return ResponseEntity.badRequest().body(e.getMessage());
+			}	
+		}).orElseGet( () -> 
+			new ResponseEntity("Apartamento não encontrado na base de Dados.", HttpStatus.BAD_REQUEST) );
 	}
 	
 	
@@ -91,5 +107,15 @@ public class ApartamentoController {
 		
 		return new ResponseEntity<String>("Apartamento deletado com sucesso!", HttpStatus.OK);
 	}
+	
+	private Apartamento converter(ApartamentoDTO apartamentoDTO) {
+		Apartamento apartamento = new Apartamento();
+		apartamento.setId(apartamentoDTO.getId());
+		apartamento.setNumero(apartamentoDTO.getNumero());
+		apartamento.setEstado(EstadoApartamento.valueOf(apartamentoDTO.getEstado())); // valeOf recebe uma String que vai representar uma corresponde da ENUM 
+	
+		return apartamento;
+	}
+	
 
 }

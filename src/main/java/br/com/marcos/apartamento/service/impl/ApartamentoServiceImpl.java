@@ -2,6 +2,7 @@ package br.com.marcos.apartamento.service.impl;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +50,11 @@ public class ApartamentoServiceImpl implements ApartamentoService {
 	public void atualizarEstado(Apartamento apartamento, EstadoApartamento estado) {
 		apartamento.setEstado(estado);
 		atualizar(apartamento);
+	}
+
+	@Override
+	public Optional<Apartamento> obterPorId(Long id) {
+		return apartamentoRepository.findById(id);
 	}
 
 }

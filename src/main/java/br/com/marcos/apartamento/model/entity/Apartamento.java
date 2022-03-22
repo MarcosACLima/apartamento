@@ -15,7 +15,10 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.validation.annotation.Validated;
 
 import br.com.marcos.apartamento.model.enums.EstadoApartamento;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Validated
@@ -23,6 +26,9 @@ import lombok.Data;
 @Table(name = "apartamento")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Data // Getter, Setter, toString, EqualsAndHashCode
+@NoArgsConstructor // construtor sem argumentos
+@AllArgsConstructor
+@Builder // para usar Builder tem q existir um construtor para todos os argumentos
 public class Apartamento implements Serializable {
 
 	private static final long serialVersionUID = 1L;
