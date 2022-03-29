@@ -14,4 +14,6 @@ public interface ApartamentoRepository extends JpaRepository<Apartamento, Long> 
 //	SELECT * FROM apartamento WHERE exists ()
  	boolean existsByNumero(Integer numero);
 
+	Apartamento findByNumero(Integer numero);
+
 }

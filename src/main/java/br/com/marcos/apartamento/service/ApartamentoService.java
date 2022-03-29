@@ -14,11 +14,15 @@ public interface ApartamentoService {
 	
 	List<Apartamento> listar();
 	
+	List<Apartamento> buscar(Apartamento apartamentoFiltro);
+	
 	void deletar(Apartamento apartamento);
 	
 	void atualizarEstado(Apartamento apartamento, EstadoApartamento estado);
 
 	Optional<Apartamento> obterPorId(Long id);
+	
+	void validar(Apartamento apartamento);
 	
 //	@Autowired
 //	private ApartamentoRepository apartamentoRepository;
